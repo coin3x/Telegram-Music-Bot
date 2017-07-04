@@ -4,7 +4,7 @@ import pymongo
 from motor.motor_asyncio import AsyncIOMotorClient
 
 
-client = AsyncIOMotorClient(host="mongodb://userHOW:113RO8K8EUqcH63e@mongodb/python")
+client = AsyncIOMotorClient(host=os.environ.get('MONGO_HOST'))
 db = client.python
 
 

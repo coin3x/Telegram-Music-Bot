@@ -29,12 +29,12 @@ not_found = """
 找不到資料 :/
 """
 bot = Bot(
-    api_token="387624138:AAEMbq8OUJsYEo9TLJLKKDdi7HmLQdSJ-bM",
-    name="棒棒勝 Music Bot",
+    api_token=os.environ.get('API_TOKEN'),
+    name=os.environ.get('BOT_NAME'),
     botan_token=os.environ.get("BOTAN_TOKEN")
 )
 logger = logging.getLogger("musicbot")
-channel = bot.channel("1084772427")
+channel = bot.channel(os.environ.get('CHANNEL'))
 
 @bot.handle("audio")
 async def add_track(chat, audio):
