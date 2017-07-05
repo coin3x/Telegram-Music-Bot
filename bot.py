@@ -43,7 +43,6 @@ logbot = Bot(
 
 logger = logging.getLogger("musicbot")
 channel = bot.channel(os.environ.get('CHANNEL'))
-logchn = logbot.channel(os.environ.get('LOGCHN'))
 @bot.handle("audio")
 async def add_track(chat, audio):
     if (await db.tracks.find_one({ "file_id": audio["file_id"] })):
@@ -67,7 +66,7 @@ async def add_track(chat, audio):
     else:
         sendervar = str(chat.sender)
         logger.info("%s 新增了 %s %s", sendervar, doc.get("performer"), doc.get("title"))
-        await logchn.send_text(sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")))
+        await bot.send_message(os.environ.get("CHNID"),sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")))
         await chat.send_text(sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")) + " !")
 
 
@@ -92,9 +91,9 @@ def default(chat, message):
 @bot.inline
 async def inline(iq):
     logger.info("%s", str(iq.sender))
-    await logchn.send_text(str(iq.sender))
+    await bot.send_message(os.environ.get("CHNID"),str(iq.sender))
     logger.info("%s 搜尋了 %s", iq.sender, iq.query)
-    await logchn.send_text(str(iq.sender) + " 搜尋了 " + str(iq.query))
+    await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + str(iq.query))
     cursor = text_search(iq.query)
     results = [inline_result(t) for t in await cursor.to_list(10)]
     await iq.answer(results)
@@ -110,7 +109,7 @@ async def start(chat, match):
     tuid = chat.sender["id"]
     if not (await db.users.find_one({ "id": tuid })):
         logger.info("新用戶 %s", chat.sender)
-        await logchn.send_text("新用戶 " + str(chat.sender))
+        await bot.send_message(os.environ.get("CHNID"),"新用戶 " + str(chat.sender))
         await db.users.insert(chat.sender.copy())
 
     await chat.send_text(greeting)
@@ -122,7 +121,7 @@ async def stop(chat, match):
     await db.users.remove({ "id": tuid })
 
     logger.info("%s 退出了", chat.sender)
-    await logchn.send_text(str(chat.sender) + " 退出了")
+    await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 退出了")
     await chat.send_text("掰掰! 😢")
 
 
@@ -176,7 +175,7 @@ async def search_tracks(chat, query, page=1):
         pass
     else:
         logger.info("%s 搜尋了 %s", chat.sender, query)
-        await logchn.send_text(str(chat.sender) + " 搜尋了 " + str(query))
+        await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
 
         limit = 3
         offset = (page - 1) * limit
