@@ -70,7 +70,7 @@ def music(chat, match):
     return search_tracks(chat, match.group(1))
 
 
-@bot.command(r'\((\d+)/\d+\) show more for "(.+)"')
+@bot.command(r'\((\d+)/\d+\) 下一頁 "(.+)"')
 def more(chat, match):
     page = int(match.group(1)) + 1
     return search_tracks(chat, match.group(2), page)
