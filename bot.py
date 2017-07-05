@@ -72,7 +72,7 @@ def music(chat, match):
 
 @bot.command(r'\((\d+)/\d+\) 下一頁 "(.+)"')
 def more(chat, match):
-    page = int(match.group(1)) + 1
+    page = int(match.group(1))
     return search_tracks(chat, match.group(2), page)
 
 
@@ -186,7 +186,7 @@ async def search_tracks(chat, query, page=1):
 
         if show_more:
             pages = math.ceil(count / limit)
-            kb = [['(%d/%d) 下一頁 "%s"' % (page, pages, query)]]
+            kb = [['(%d/%d) 下一頁 "%s"' % (page+1, pages, query)]]
             keyboard = {
                 "keyboard": kb,
                 "resize_keyboard": True
