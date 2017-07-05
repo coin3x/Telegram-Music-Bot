@@ -40,6 +40,7 @@ channel = bot.channel(os.environ.get('CHANNEL'))
 @bot.handle("audio")
 async def add_track(chat, audio):
     if (await db.tracks.find_one({ "file_id": audio["file_id"] })):
+        await chat.send_text("資料庫裡已經有這首囉 owo")
         return
 
     if "title" not in audio:
@@ -57,9 +58,9 @@ async def add_track(chat, audio):
     if (str(chat.sender) == 'N/A'):
         sendervar = '棒棒勝 Music Channel'
     else:
-        sendervar = chat.sender
-    logger.info("%s 新增了 %s %s",
-        sendervar, doc.get("performer"), doc.get("title"))
+        sendervar = str(chat.sender)
+        logger.info("%s 新增了 %s %s", sendervar, doc.get("performer"), doc.get("title"))
+        await chat.send_text(sendervar + "新增了" + str(doc.get("performer")) + "-" + str(doc.get("title")) + "!")
 
 
 @bot.command(r'@%s (.+)' % bot.name)
