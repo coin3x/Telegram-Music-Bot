@@ -74,7 +74,8 @@ class RestBridge:
 
     async def start(self):
         loop = asyncio.get_event_loop()
-        srv = await loop.create_server(self.handler, '0.0.0.0', 8080)
+        port = os.environ.get(OPENSHIFT_music-index-bot_PORT)
+        srv = await loop.create_server(self.handler, '0.0.0.0', port)
         logger.info('serving REST on %s', srv.sockets[0].getsockname())
         self.srv = srv
 
