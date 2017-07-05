@@ -60,7 +60,7 @@ async def add_track(chat, audio):
     else:
         sendervar = str(chat.sender)
         logger.info("%s 新增了 %s %s", sendervar, doc.get("performer"), doc.get("title"))
-        await chat.send_text(sendervar + "新增了" + str(doc.get("performer")) + "-" + str(doc.get("title")) + "!")
+        await chat.send_text(sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")) + " !")
 
 
 @bot.command(r'@%s (.+)' % bot.name)
