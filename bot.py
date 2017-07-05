@@ -7,9 +7,10 @@ from aiotg import Bot, chat
 from database import db, text_search
 
 greeting = """
-    ✋ 歡迎來到棒棒勝 Music 的 Bot 頻道! 🎧
+    ✋ 歡迎來到棒棒勝 Music 的 Bot ! 🎧
 輸入作者/曲名來搜尋音樂資料庫，傳送音樂檔案以增加至資料庫。
 輸入 /help 來獲取說明!
+** 丟進本 Bot 的音樂不會同步到頻道唷!只有頻道的會同步過來 owo **
 """
 
 help = """
@@ -57,7 +58,7 @@ async def add_track(chat, audio):
         sendervar = '棒棒勝 Music Channel'
     else:
         sendervar = chat.sender
-    logger.info("%s added %s %s",
+    logger.info("%s 新增了 %s %s",
         sendervar, doc.get("performer"), doc.get("title"))
 
 
@@ -82,7 +83,7 @@ def default(chat, message):
 @bot.inline
 async def inline(iq):
     logger.info("%s", str(iq.sender))
-    logger.info("%s searching for %s", iq.sender, iq.query)
+    logger.info("%s 搜尋了 %s", iq.sender, iq.query)
     cursor = text_search(iq.query)
     results = [inline_result(t) for t in await cursor.to_list(10)]
     await iq.answer(results)
@@ -97,7 +98,7 @@ def usage(chat, match):
 async def start(chat, match):
     tuid = chat.sender["id"]
     if not (await db.users.find_one({ "id": tuid })):
-        logger.info("new user %s", chat.sender)
+        logger.info("新用戶 %s", chat.sender)
         await db.users.insert(chat.sender.copy())
 
     await chat.send_text(greeting)
@@ -130,7 +131,7 @@ async def stats(chat, match):
     aggr = await cursor.to_list(1)
 
     if len(aggr) == 0:
-        return (await chat.send_text("資訊還沒準備好!"))
+        return (await chat.send_text("統計資訊還沒好!"))
 
     size = human_size(aggr[0]["size"])
     text = '%d 首歌曲, %s' % (count, size)
@@ -161,7 +162,7 @@ async def search_tracks(chat, query, page=1):
     if(str(chat.sender) == "N/A"):
         pass
     else:
-        logger.info("%s searching for %s", chat.sender, query)
+        logger.info("%s 搜尋了 %s", chat.sender, query)
 
         limit = 3
         offset = (page - 1) * limit
@@ -184,7 +185,7 @@ async def search_tracks(chat, query, page=1):
 
         if show_more:
             pages = math.ceil(count / limit)
-            kb = [['(%d/%d) Show more for "%s"' % (page, pages, query)]]
+            kb = [['(%d/%d) 下一頁 "%s"' % (page, pages, query)]]
             keyboard = {
                 "keyboard": kb,
                 "resize_keyboard": True
