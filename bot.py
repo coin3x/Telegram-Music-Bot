@@ -36,7 +36,7 @@ bot = Bot(
 )
 logger = logging.getLogger("musicbot")
 channel = bot.channel(os.environ.get('CHANNEL'))
-logchn = bot.channel(os.environ["LOGCHN"])
+logchn = bot.channel(os.environ.get["LOGCHN"])
 
 @bot.handle("audio")
 async def add_track(chat, audio):
