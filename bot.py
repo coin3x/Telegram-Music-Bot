@@ -53,9 +53,12 @@ async def add_track(chat, audio):
         doc["sender"] = os.environ.get("CHANNEL")
         
     await db.tracks.insert(doc)
-
+    if (str(chat.sender) == 'N/A'):
+        sendervar = '棒棒勝 Music Channel'
+    else:
+        sendervar = chat.sender
     logger.info("%s added %s %s",
-        chat.sender, doc.get("performer"), doc.get("title"))
+        sendervar, doc.get("performer"), doc.get("title"))
 
 
 @bot.command(r'@%s (.+)' % bot.name)
