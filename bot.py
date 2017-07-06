@@ -35,24 +35,18 @@ bot = Bot(
     botan_token=os.environ.get("BOTAN_TOKEN")
 )
 
-'''
-logbot = Bot(
-     api_token=os.environ.get('LOG_API_TOKEN'),
-     name=os.environ.get('LOG_BOT_NAME'),
-     botan_token=os.environ.get("LOG_BOTAN_TOKEN")
-)
-'''
-
-'''
-bot_new = telegram.Bot(token=os.environ.get('API_TOKEN'))
-'''
-
 logger = logging.getLogger("musicbot")
 channel = bot.channel(os.environ.get('CHANNEL'))
 @bot.handle("audio")
 async def add_track(chat, audio):
+    if (str(chat.sender) == 'N/A'):
+        sendervar = '棒棒勝 Music Channel'
+    else:
+        sendervar = str(chat.sender)
     if (await db.tracks.find_one({ "file_id": audio["file_id"] })):
         await chat.send_text("資料庫裡已經有這首囉 owo")
+        logger.info("%s 傳送了重複的歌曲 %s %s", sendervar, str(audio.get("performer")), str(audio.get("title")))
+        await bot.send_message(os.environ.get("CHNID"),sendervar + " 新增了 " + str(audio.get("performer")) + " - " + str(audio.get("title")))
         return
 
     if "title" not in audio:
@@ -67,13 +61,9 @@ async def add_track(chat, audio):
         doc["sender"] = os.environ.get("CHANNEL")
         
     await db.tracks.insert(doc)
-    if (str(chat.sender) == 'N/A'):
-        sendervar = '棒棒勝 Music Channel'
-    else:
-        sendervar = str(chat.sender)
-        logger.info("%s 新增了 %s %s", sendervar, doc.get("performer"), doc.get("title"))
-        await bot.send_message(os.environ.get("CHNID"),sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")))
-        await chat.send_text(sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")) + " !")
+    logger.info("%s 新增了 %s %s", sendervar, doc.get("performer"), doc.get("title"))
+    await bot.send_message(os.environ.get("CHNID"),sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")))
+    await chat.send_text(sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")) + " !")
 
 
 @bot.command(r'@%s (.+)' % bot.name)
