@@ -46,7 +46,7 @@ async def add_track(chat, audio):
     if (await db.tracks.find_one({ "file_id": audio["file_id"] })):
         await chat.send_text("資料庫裡已經有這首囉 owo")
         logger.info("%s 傳送了重複的歌曲 %s %s", sendervar, str(audio.get("performer")), str(audio.get("title")))
-        await bot.send_message(os.environ.get("CHNID"),sendervar + " 新增了 " + str(audio.get("performer")) + " - " + str(audio.get("title")))
+        await bot.send_message(os.environ.get("CHNID"),sendervar + " 傳送了重複的歌曲 " + str(audio.get("performer")) + " - " + str(audio.get("title")))
         return
 
     if "title" not in audio:
