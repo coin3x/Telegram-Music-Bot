@@ -84,7 +84,7 @@ def default(chat, message):
     msg1 = message["text"].split(" type:")
     msg1[0]= msg1[0].split(" ")
     global textA
-    textA = re.escape("/")
+    textA = "/"
     for k in range(len(msg1[0])):
         textA = textA + '(?=.*?' + msg1[0][k] + ")"
     textA = textA + '.*?/i'
