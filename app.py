@@ -17,8 +17,9 @@ async def start():
 async def stop():
     await rest.stop()
 
-msg_temp = ''
+
 if __name__ == '__main__':
+    msg_temp = ''
     loglevel = logging.DEBUG if os.getenv("DEBUG") else logging.INFO
     logging.basicConfig(level=loglevel)
 
