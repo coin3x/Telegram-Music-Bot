@@ -82,18 +82,18 @@ def more(chat, match):
 @bot.default
 def default(chat, message):
     msg1 = message["text"].split(" type:")
+    msg1[0]= msg1[0].split(" ")
+    global textA
+    textA = "/"
+    for k in range(len(msg1[0])):
+        textA = textA + '(?=.*?' + msg1[0][k] + ")"
+    textA = textA + '.*?/i'
+    msg1[0] = re.compile (textA, re.IGNORECASE)
+    logger.info(msg1[0])
     if (len(msg1) == 2):
-        msg1[0]= msg1[0].split(" ")
-        global textA
-        textA = "/"
-        for k in range(len(msg1[0])):
-            textA = textA + '(?=.*?' + msg1[0][k] + ")"
-        textA = textA + '.*?/i'
-        msg1[0] = re.compile (textA, re.IGNORECASE)
-        logger.info(msg1[0])
         return search_tracks(chat, msg1[0], typev=msg1[1])
     elif (len(msg1) == 1):
-        return search_tracks(chat, message["text"])
+        return search_tracks(chat, msg1[0])
     else:
         logger.info("元素個數有問題RR")
         bot.send_message(os.environ.get("CHNID"),"元素個數有問題RRR")
