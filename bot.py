@@ -79,13 +79,13 @@ def default(chat, message):
         return search_tracks(chat, message["text"])
 
 @bot.command(r'/flac (.+)')
-    def music(chat, match):
+async def music(chat, match):
         return search_tracks(chat, match.group(1),,'flac')
 
 @bot.command(r'/mp3 (.+)')
-    def music(chat, match):
+async def music(chat, match):
         return search_tracks(chat, match.group(1),,'mpeg')
-    
+
 @bot.inline
 async def inline(iq):
     logger.info("%s", str(iq.sender))
