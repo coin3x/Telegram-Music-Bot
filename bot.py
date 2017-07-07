@@ -80,11 +80,11 @@ def default(chat, message):
 
 @bot.command(r'/flac (.+)')
 async def music(chat, match):
-        return search_tracks(chat, match.group(1),,'flac')
+        return search_tracks(chat, match.group(1),typev='flac')
 
 @bot.command(r'/mp3 (.+)')
 async def music(chat, match):
-        return search_tracks(chat, match.group(1),,'mpeg')
+        return search_tracks(chat, match.group(1),typev='mpeg')
 
 @bot.inline
 async def inline(iq):
