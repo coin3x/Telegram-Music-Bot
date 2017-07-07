@@ -85,6 +85,7 @@ def default(chat, message):
     msg_temp = ''
     i=0
     while (i < len(msg1[0])):
+        global msgtemp
         msgtemp = msgtemp + msg1[0][i]
         i = i + 1
     msg1[0] = msg_temp
