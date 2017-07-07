@@ -82,12 +82,11 @@ def more(chat, match):
 def default(chat, message):
     msg1 = message["text"].split(" type:")
     msg1[0] = msg1[0].split(" ")
-    msg_temp = msg1[0][0]
-    i=1
-    while (i < len(msg1[0])):
-        msgtemp = msgtemp + msg1[0][i]
-        i = i + 1
-    msg1[0] = msg_temp
+    def getremsg(source):
+        for i in range(0, len(source), 1):
+            msg_temp = msgtemp + source[i]
+        return (msg_temp)
+    msg1[0] = getremsg(msg1[0])
     if (len(msg1) == 2):
         return search_tracks(chat, msg1[0], typev=msg1[1])
     elif (len(msg1) == 1):
