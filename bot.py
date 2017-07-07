@@ -86,9 +86,9 @@ def default(chat, message):
     global textA
     textA = re.escape("/")
     for k in range(len(msg1[0])):
-        textA = textA + re.escape('(?=.*?') + msg1[0][k] + ")"
-    textA = textA + re.escape('.*?/i')
-    msg1[0] = textA
+        textA = textA + '(?=.*?' + msg1[0][k] + ")"
+    textA = textA + '.*?/i'
+    msg1[0] = re.compile (textA)
     logger.info(msg1[0])
     if (len(msg1) == 2):
         return search_tracks(chat, msg1[0], typev=msg1[1])
