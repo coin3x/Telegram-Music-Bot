@@ -107,11 +107,11 @@ def default(chat, message):
     elif (len(msg1) == 1):
         return search_tracks(chat, message["text"])'''
     return search_tracks(chat, message["text"])
-    else:
+    '''else:
         logger.info("元素個數有問題RR")
         bot.send_message(os.environ.get("CHNID"),"元素個數有問題RRR")
         bot.send_message(os.environ.get("CHNID"),'(message["text"] , msg1 , len(msg1) ) = ' + str(message["text"]) + " , " + str(msg1) + " , " + str(len(msg1)))
-        logger.info('(message["text"] , msg1 , len(msg1)) = (%s , %s , %d)', str(message["text"]), str(msg1), len(msg1))
+        logger.info('(message["text"] , msg1 , len(msg1)) = (%s , %s , %d)', str(message["text"]), str(msg1), len(msg1))'''
 
 @bot.inline
 async def inline(iq):
