@@ -20,6 +20,10 @@ help = """
 ```棒棒勝 type:flac```
 ```棒棒勝 type:mp3```
 ```棒棒勝 type:mpeg```
+若同時想搜尋作者和曲名，請用 `>` 隔開 (預設為作者、曲名都納入搜尋)，像這樣:
+```棒棒勝>洨安之歌```
+也可以搭配`type`指令，像這樣:
+```棒棒勝>洨安之歌 type:flac```
 輸入 `/stats` 來獲取 bot 資訊。
 用 `/music` 指令來在群聊內使用棒棒勝 Music Bot，像這樣:
 ```/music 棒棒勝```
@@ -247,11 +251,18 @@ async def search_tracks(chat, query=1, page=1, typev='audio', author=1, song=1):
 
         if show_more:
             pages = math.ceil(count / limit)
-            kb = [['(%d/%d) 下一頁 "%s"' % (page+1, pages, query)]]
-            keyboard = {
-                "keyboard": kb,
-                "resize_keyboard": True
-            }
+            if (query != 1):
+                kb = [['(%d/%d) 下一頁 "%s"' % (page+1, pages, query)]]
+                keyboard = {
+                    "keyboard": kb,
+                    "resize_keyboard": True
+                }
+            else:
+                kb = [['(%d/%d) 下一頁 "%s>%s"' % (page+1, pages, author, song)]]
+                keyboard = {
+                    "keyboard": kb,
+                    "resize_keyboard": True
+                }
         else:
             keyboard = { "hide_keyboard": True }
 

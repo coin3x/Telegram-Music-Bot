@@ -54,7 +54,7 @@ def text_search(query,typef='audio',aut=1,son=1):
         return db.tracks.find(
             {"$and":[
                 {'mime_type': {'$regex':typef, '$options':'i'}},
-                {"$or":[
+                {"$and":[
                     {'title': finalSON},
                 {'performer': finalAUT}
                 ]}]},
