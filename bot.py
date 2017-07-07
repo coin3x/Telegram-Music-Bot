@@ -83,12 +83,13 @@ def more(chat, match):
 def default(chat, message):
     msg1 = message["text"].split(" type:")
     msg1[0]= msg1[0].split(" ")
-    global text
+    global textA
     text = re.escape("/")
     for k in range(len(msg1[0])):
-        text = text + re.escape('(?=.*?') + msg1[0][k] + ")"
-    text = text + re.escape('/i')
-    msg1[0] = text
+        texAt = textA + re.escape('(?=.*?') + msg1[0][k] + ")"
+    textA = textA + re.escape('/i')
+    msg1[0] = textA
+    print (msg1[0])
     if (len(msg1) == 2):
         return search_tracks(chat, msg1[0], typev=msg1[1])
     elif (len(msg1) == 1):
