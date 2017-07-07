@@ -228,13 +228,13 @@ async def search_tracks(chat, query, page=1):
             art = typel[0].split('>')
             author = art[0]
             song = art[1]
-            if (typel[1] == 'audio'):
+            if (len(typel) == 1):
                 logger.info("%s 搜尋了 %s 的 %s", chat.sender, author, song)
                 await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + author + " 的 " + song)
             else:
                 logger.info("%s 搜尋了 %s 格式的 %s 的 %s", chat.sender, typel[1].upper(), author, song)
                 await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + author + " 的 " + song)
-        elif (typel[1] == 'audio'):
+        elif (len(typel) == 1):
             logger.info("%s 搜尋了 %s", chat.sender, query)
             await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
         else:
