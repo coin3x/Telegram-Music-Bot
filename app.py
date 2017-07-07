@@ -19,7 +19,7 @@ async def stop():
 
 
 if __name__ == '__main__':
-    msg_temp = ''
+    msg_temp = None
     loglevel = logging.DEBUG if os.getenv("DEBUG") else logging.INFO
     logging.basicConfig(level=loglevel)
 
