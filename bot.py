@@ -80,7 +80,7 @@ def default(chat, message):
 
 @bot.inline
 async def inline(iq):
-    msg = iq.query.split('type:')
+    msg = str(iq.query).split("type:")
     if (len(msg) == '2'):
         logger.info("%s", str(msg[0]))
         await bot.send_message(os.environ.get("CHNID"),str(msg[0]))
