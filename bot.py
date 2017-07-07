@@ -87,7 +87,7 @@ def default(chat, message):
     text = re.escape("/")
     for k in range(len(msg1[0])):
         text = text + re.escape('(?=.*?') + msg1[0][k] + ")"
-    text = text + re.escape('/gi')
+    text = text + re.escape('/i')
     msg1[0] = text
     if (len(msg1) == 2):
         return search_tracks(chat, msg1[0], typev=msg1[1])
