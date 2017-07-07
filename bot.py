@@ -86,7 +86,7 @@ def default(chat, message):
     global textA
     textA = re.escape("/")
     for k in range(len(msg1[0])):
-        textA = re.escape(textA + '(?=.*?' + msg1[0][k] + ")")
+        textA = textA + re.escape('(?=.*?') + msg1[0][k] + ")"
     textA = textA + re.escape('.*?/i')
     msg1[0] = textA
     logger.info(msg1[0])
