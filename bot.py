@@ -78,7 +78,7 @@ def more(chat, match):
 def default(chat, message):
     msg1 = message["text"].split("type:")
     if (str(len(msg1)) == '2'):
-        return search_tracks(chat, msg1[0],typev=msg1[1])
+        return search_tracks(chat, msg1[0], typev=msg1[1])
     elif (str(len(msg1)) == '1'):
         return search_tracks(chat, message["text"])
     else:
@@ -93,9 +93,9 @@ async def inline(iq):
     if (str(len(msg)) == '2'):
         logger.info("%s", str(msg[0]))
         await bot.send_message(os.environ.get("CHNID"),str(msg[0]))
-        logger.info("%s 搜尋了 %s 格式的 %s", iq.sender, msg[1], msg[0])
+        logger.info("%s 搜尋了 %s 格式的 %s", iq.sender, msg[1].upper(), msg[0])
         await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + msg[1] + " 格式的 " + msg[0])
-        cursor = text_search(msg[0],msg[1])
+        cursor = text_search(msg[0], msg[1])
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
     elif (str(len(msg)) == '1'):
@@ -103,7 +103,7 @@ async def inline(iq):
         await bot.send_message(os.environ.get("CHNID"),str(iq.sender))
         logger.info("%s 搜尋了 %s", iq.sender, iq.query)
         await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + str(iq.query))
-        cursor = text_search(iq.query)
+        cursor = text_search(iq.query, 'audio')
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
     else:
@@ -196,7 +196,7 @@ async def search_tracks(chat, query, page=1, typev='audio'):
         limit = 3
         offset = (page - 1) * limit
 
-        cursor = text_search(query,typev).skip(offset).limit(limit)
+        cursor = text_search(query, typef=typev).skip(offset).limit(limit)
         count = await cursor.count()
         results = await cursor.to_list(limit)
 
@@ -205,9 +205,9 @@ async def search_tracks(chat, query, page=1, typev='audio'):
             return
 
         # Return single result if we have exact match for title and performer
-        if results[0]['score'] > 2:
+        '''if results[0]['score'] > 2:
             limit = 1
-            results = results[:1]
+            results = results[:1]'''
 
         newoff = offset + limit
         show_more = count > newoff

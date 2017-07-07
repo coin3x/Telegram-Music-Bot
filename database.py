@@ -17,10 +17,12 @@ db = client.python
         { 'score': { '$meta': 'textScore' } }
     ).sort([('score', {'$meta': 'textScore'})])'''
 
-def text_search(query,type='audio'):
+def text_search(query,typef='audio'):
+    if (typef == 'mp3'):
+        typef = 'mpeg'
     return db.tracks.find(
         {"$and":[
-            {'mime_type':{'$regex':type, '$options':'i'}},
+            {'mime_type':{'$regex':typef, '$options':'i'}},
             {"$or":[
                 {'title':{'$regex':query, '$options':'i'}},
                 {'performer':{'$regex':query, '$options':'i'}}
