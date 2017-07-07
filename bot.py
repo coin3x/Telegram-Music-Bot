@@ -76,12 +76,21 @@ def more(chat, match):
 
 @bot.default
 def default(chat, message):
+    msg1 = message["text"].split("type:")
+    if (str(len(msg1)) == '2'):
+        return search_tracks(chat, msg1[0],typev=msg1[1])
+    elif (str(len(msg1)) == '1'):
         return search_tracks(chat, message["text"])
+    else:
+        logger.info("元素個數有問題RR")
+        await bot.send_message(os.environ.get("CHNID"),"元素個數有問題RRR")
+        await bot.send_message(os.environ.get("CHNID")"(message["text"] , msg1 , len(msg1) ) = " + str(message["text"]) + " , " + str(msg1) + " , " + str(len(msg1)))
+        logger.info("(message["text"] , msg1 , len(msg1)) = (%s , %s , %d)", str(message["text"]), str(msg1), len(msg1))
 
 @bot.inline
 async def inline(iq):
-    msg = str(iq.query).split("type:")
-    if (len(msg) == '2'):
+    msg = iq.query.split("type:")
+    if (str(len(msg)) == '2'):
         logger.info("%s", str(msg[0]))
         await bot.send_message(os.environ.get("CHNID"),str(msg[0]))
         logger.info("%s 搜尋了 %s 格式的 %s", iq.sender, msg[1], msg[0])
@@ -89,7 +98,7 @@ async def inline(iq):
         cursor = text_search(msg[0],msg[1])
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
-    elif (len(msg) == '1'):
+    elif (str(len(msg)) == '1'):
         logger.info("%s", str(iq.sender))
         await bot.send_message(os.environ.get("CHNID"),str(iq.sender))
         logger.info("%s 搜尋了 %s", iq.sender, iq.query)
@@ -100,6 +109,8 @@ async def inline(iq):
     else:
         logger.info("元素個數有問題RR")
         await bot.send_message(os.environ.get("CHNID"),"元素個數有問題RRR")
+        await bot.send_message(os.environ.get("CHNID")"(iq.query , msg , len(msg)) = " + str(iq.query) + " , " + str(msg) + " , " + str(len(msg)))
+        logger.info("(iq.query , msg , len(msg)) = (%s , %s , %d)", str(iq.query), str(msg), len(msg))
 
 
 @bot.command(r'/music(@%s)?$' % bot.name)
