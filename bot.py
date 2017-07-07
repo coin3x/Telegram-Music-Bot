@@ -82,6 +82,8 @@ def more(chat, match):
 def default(chat, message):
     msg1 = message["text"].split(" type:")
     msg1[0] = msg1[0].split(" ")
+    global msg_temp
+    msg_temp = None
     def getremsg(source):
         global msg_temp
         for i in range(0, len(source), 1):
