@@ -57,9 +57,7 @@ async def add_track(chat, audio):
     await db.tracks.insert(doc)
     logger.info("%s 新增了 %s %s", sendervar, doc.get("performer"), doc.get("title"))
     await bot.send_message(os.environ.get("CHNID"),sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")))
-    if (sendervar == '棒棒勝 Music Channel'):
-        pass
-    else:    
+    if (sendervar != '棒棒勝 Music Channel'):
         await chat.send_text(sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")) + " !")
 
 
