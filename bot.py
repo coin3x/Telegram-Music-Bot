@@ -87,7 +87,7 @@ def default(chat, message):
     textA = re.escape("/")
     for k in range(len(msg1[0])):
         textA = textA + re.escape('(?=.*?') + msg1[0][k] + ")"
-    textA = textA + re.escape('/i')
+    textA = textA + re.escape('.*?/i')
     msg1[0] = textA
     print (msg1[0])
     if (len(msg1) == 2):
