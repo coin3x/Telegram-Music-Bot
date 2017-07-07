@@ -81,7 +81,7 @@ def default(chat, message):
 @bot.inline
 async def inline(iq):
     msg = iq.query.split('type:')
-    if (msg[1]):
+    if (len(msg) == '2'):
         logger.info("%s", str(msg[0]))
         await bot.send_message(os.environ.get("CHNID"),str(msg[0]))
         logger.info("%s 搜尋了 %s 格式的 %s", iq.sender, msg[1], msg[0])
@@ -89,7 +89,7 @@ async def inline(iq):
         cursor = text_search(msg[0],msg[1])
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
-    else:
+    elif (len(msg) == '1'):
         logger.info("%s", str(iq.sender))
         await bot.send_message(os.environ.get("CHNID"),str(iq.sender))
         logger.info("%s 搜尋了 %s", iq.sender, iq.query)
@@ -97,6 +97,9 @@ async def inline(iq):
         cursor = text_search(iq.query)
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
+    else:
+        logger.info("元素個數有問題RR")
+        await bot.send_message(os.environ.get("CHNID"),"元素個數有問題RRR")
 
 
 @bot.command(r'/music(@%s)?$' % bot.name)
