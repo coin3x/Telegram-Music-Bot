@@ -24,6 +24,7 @@ def text_search(query):
     if (query.find(">") == -1):
         '''queryty = query.split(" type:")'''
         query2 = typel[0].split(" ")
+        typef = typel[1]
         if (len(querty) == 1):
             typef = 'audio'
         elif (typef == 'mp3'):
@@ -57,12 +58,14 @@ def text_search(query):
         for k in range(len(aut2)):
             textAUT = textAUT + '(?=.*?' + aut2[k] + ")"
         textAUT = textAUT + '.*?'
+        logger.info(textAUT)
         finalAUT = re.compile (textAUT, re.IGNORECASE)
         son2 = art[1].split(" ")
         textSON = ''
         for k in range(len(son2)):
             textSON = textSON + '(?=.*?' + son2[k] + ")"
         textSON = textSON + '.*?'
+        logger.info(textSON)
         finalSON = re.compile (textSON, re.IGNORECASE) 
         return db.tracks.find(
             {"$and":[

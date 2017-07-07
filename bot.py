@@ -223,6 +223,7 @@ def send_track(chat, keyboard, track):
 '''async def search_tracks(chat, query=1, page=1, typev='audio', author=1, song=1):'''
 async def search_tracks(chat, query, page=1):
     if(str(chat.sender) != "N/A"):
+        typel = query.split(" type:")
         if (query.find(">") != -1):
             typel = query.split(" type:")
             if (typel[1] == 'audio'):
@@ -237,11 +238,10 @@ async def search_tracks(chat, query, page=1):
                 song = art[1]
                 logger.info("%s 搜尋了 %s 格式的 %s 的 %s", chat.sender, typel[1].upper(), author, song)
                 await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + author + " 的 " + song)
-        elif (typev == 'audio'):
+        elif (typel[1] == 'audio'):
             logger.info("%s 搜尋了 %s", chat.sender, query)
             await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
         else:
-            typel = query.split(" type:")
             logger.info("%s 搜尋了 %s 格式的 %s", chat.sender, typel[1].upper(), type1[0])
             await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + str(type1[0]))
 
