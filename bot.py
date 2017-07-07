@@ -85,8 +85,9 @@ def more(chat, match):
 
 @bot.default
 def default(chat, message):
-    msg1 = message["text"].split(" type:")
-    art = msg1[0].split('>')
+    '''msg1 = message["text"].split(" type:")
+    art = msg1[0].split('>')'''
+
     '''first= msg1[0].split(" ")
     global textA
     textA = ''
@@ -95,7 +96,8 @@ def default(chat, message):
     textA = textA + '.*?'
     final = re.compile (textA, re.IGNORECASE)
     logger.info(msg1[0])'''
-    if (len(art) == 2):
+
+    '''if (len(art) == 2):
         if (len(msg1) == 2):
             return search_tracks(chat, query=message["text"], author=art[0], song=art[1], typev=msg1[1])
         elif (len(msg1) == 1):
@@ -103,7 +105,8 @@ def default(chat, message):
     elif (len(msg1) == 2):
         return search_tracks(chat, message["text"], typev=msg1[1])
     elif (len(msg1) == 1):
-        return search_tracks(chat, message["text"])
+        return search_tracks(chat, message["text"])'''
+    return search_tracks(chat, message["text"])
     else:
         logger.info("元素個數有問題RR")
         bot.send_message(os.environ.get("CHNID"),"元素個數有問題RRR")
@@ -217,38 +220,35 @@ def send_track(chat, keyboard, track):
     )
 
 
-async def search_tracks(chat, query=1, page=1, typev='audio', author=1, song=1):
+'''async def search_tracks(chat, query=1, page=1, typev='audio', author=1, song=1):'''
+async def search_tracks(chat, query, page=1):
     if(str(chat.sender) != "N/A"):
-        if (author != 1 and song != 1):
-            if (typev == 'audio'):
+        typel = query.split(" type:")
+        if (query.find(">") != -1):
+            if (typel[1] == 'audio'):
                 art = query.split('>')
                 author = art[0]
                 song = art[1]
                 logger.info("%s 搜尋了 %s 的 %s", chat.sender, author, song)
                 await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + author + " 的 " + song)
             else:
-                msg1 = query.split(" type:")
-                art = msg1[0].split('>')
-                typev = msg1[1]
-                query = msg1[0]
+                art = type1[0].split('>')
+                query = type1[0]
                 author = art[0]
                 song = art[1]
-                logger.info("%s 搜尋了 %s 格式的 %s 的 %s", chat.sender, typev.upper(), author, song)
-                await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typev.upper() + " 格式的 " + author + " 的 " + song)
+                logger.info("%s 搜尋了 %s 格式的 %s 的 %s", chat.sender, typel[1].upper(), author, song)
+                await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + author + " 的 " + song)
         elif (typev == 'audio'):
             logger.info("%s 搜尋了 %s", chat.sender, query)
             await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
         else:
-            msg1 = query.split(" type:")
-            typev = msg1[1]
-            query = msg1[0]
-            logger.info("%s 搜尋了 %s 格式的 %s", chat.sender, typev.upper(), query)
-            await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typev.upper() + " 格式的 " + str(query))
+            logger.info("%s 搜尋了 %s 格式的 %s", chat.sender, typel[1].upper(), type1[0])
+            await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + str(type1[0]))
 
         limit = 3
         offset = (page - 1) * limit
 
-        cursor = text_search(query, typef=typev, aut=author, son=song).skip(offset).limit(limit)
+        cursor = text_search(query).skip(offset).limit(limit)
         count = await cursor.count()
         results = await cursor.to_list(limit)
 

@@ -17,15 +17,17 @@ db = client.python
         { 'score': { '$meta': 'textScore' } }
     ).sort([('score', {'$meta': 'textScore'})])'''
 
-def text_search(query,typef='audio',aut=1,son=1):
-    if (typef == 'mp3'):
+'''def text_search(query,typef='audio',aut=1,son=1):'''
+def text_search(query):
+    typel = query.split(" type:")
+    if (typel[1] == 'mp3'):
         typef = 'mpeg'
     if (query.find(">") == -1):
         queryty = query.split(" type:")
-        query2 = queryty.split(" ")
+        query2 = queryty[0].split(" ")
         if (len(querty) == 1):
             typef = 'audio'
-        else:
+        elif (typef != 'mpeg'):
             typef = querty[1]
         global textA
         textA = ''
@@ -42,22 +44,19 @@ def text_search(query,typef='audio',aut=1,son=1):
                 ]}]},
             { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
     elif (query.find(">") != -1):
-        RRR = query.split(" type:")
-        art = RRR[0].split(">")
-        if (len(RRR) == 1):
+        art = typel[0].split(">")
+        if (len(typel) == 1):
             typef = 'audio'
-        else:
-            typef = RRR[1]
-        aut = art[0]
-        son = art[1]
-        aut2 = aut.split(" ")
+        elif (typef != 'mpeg'):
+            typef = typel[1]
+        aut2 = art[0].split(" ")
         global textAUT
         textAUT = ''
         for k in range(len(aut2)):
             textAUT = textAUT + '(?=.*?' + aut2[k] + ")"
         textAUT = textAUT + '.*?'
         finalAUT = re.compile (textAUT, re.IGNORECASE)
-        son2 = son.split(" ")
+        son2 = art[1].split(" ")
         global textSON
         textSON = ''
         for k in range(len(son2)):
