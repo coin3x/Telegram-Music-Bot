@@ -85,33 +85,7 @@ def more(chat, match):
 
 @bot.default
 def default(chat, message):
-    '''msg1 = message["text"].split(" type:")
-    art = msg1[0].split('>')'''
-
-    '''first= msg1[0].split(" ")
-    global textA
-    textA = ''
-    for k in range(len(first)):
-        textA = textA + '(?=.*?' + first[k] + ")"
-    textA = textA + '.*?'
-    final = re.compile (textA, re.IGNORECASE)
-    logger.info(msg1[0])'''
-
-    '''if (len(art) == 2):
-        if (len(msg1) == 2):
-            return search_tracks(chat, query=message["text"], author=art[0], song=art[1], typev=msg1[1])
-        elif (len(msg1) == 1):
-            return search_tracks(chat, query=message["text"], author=art[0], song=art[1])
-    elif (len(msg1) == 2):
-        return search_tracks(chat, message["text"], typev=msg1[1])
-    elif (len(msg1) == 1):
-        return search_tracks(chat, message["text"])'''
     return search_tracks(chat, message["text"])
-    '''else:
-        logger.info("元素個數有問題RR")
-        bot.send_message(os.environ.get("CHNID"),"元素個數有問題RRR")
-        bot.send_message(os.environ.get("CHNID"),'(message["text"] , msg1 , len(msg1) ) = ' + str(message["text"]) + " , " + str(msg1) + " , " + str(len(msg1)))
-        logger.info('(message["text"] , msg1 , len(msg1)) = (%s , %s , %d)', str(message["text"]), str(msg1), len(msg1))'''
 
 @bot.inline
 async def inline(iq):
@@ -220,7 +194,6 @@ def send_track(chat, keyboard, track):
     )
 
 
-'''async def search_tracks(chat, query=1, page=1, typev='audio', author=1, song=1):'''
 async def search_tracks(chat, query, page=1):
     if(str(chat.sender) != "N/A"):
         typel = query.split(" type:")

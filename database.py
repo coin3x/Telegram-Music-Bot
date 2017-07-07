@@ -8,22 +8,13 @@ client = AsyncIOMotorClient(host=os.environ.get('MONGO_HOST'))
 db = client.python
 
 
-'''def text_search(query):
-    return db.tracks.find(
-        {"$or":[
-            {'title':{'$regex':query, '$options':'i'}},
-            {'performer':{'$regex':query, '$options':'i'}}
-        ]},
-        { 'score': { '$meta': 'textScore' } }
-    ).sort([('score', {'$meta': 'textScore'})])'''
 
-'''def text_search(query,typef='audio',aut=1,son=1):'''
 def text_search(query):
     typel = query.split(" type:")
     if (query.find(">") == -1):
-        '''queryty = query.split(" type:")'''
+
         query2 = typel[0].split(" ")
-        if (len(querty) == 1):
+        if (len(typel) == 1):
             typef = 'audio'
         elif (typel[1] == 'mp3'):
             typef = 'mpeg'
