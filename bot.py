@@ -172,6 +172,7 @@ def send_track(chat, keyboard, track):
 
 async def search_tracks(chat, query, page=1, typev='audio'):
     if(str(chat.sender) != "N/A"):
+        if (typev == 'audio'):
             logger.info("%s 搜尋了 %s", chat.sender, query)
             await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
         else:
