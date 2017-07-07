@@ -89,7 +89,7 @@ def default(chat, message):
         textA = re.escape(textA + '(?=.*?' + msg1[0][k] + ")")
     textA = textA + re.escape('.*?/i')
     msg1[0] = textA
-    loffer.info(msg1[0])
+    logger.info(msg1[0])
     if (len(msg1) == 2):
         return search_tracks(chat, msg1[0], typev=msg1[1])
     elif (len(msg1) == 1):
