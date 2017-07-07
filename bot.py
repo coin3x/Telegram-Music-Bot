@@ -82,10 +82,9 @@ def more(chat, match):
 def default(chat, message):
     msg1 = message["text"].split(" type:")
     msg1[0] = msg1[0].split(" ")
-    msg_temp = ''
-    i=0
+    msg_temp = msg1[0][0]
+    i=1
     while (i < len(msg1[0])):
-        global msgtemp
         msgtemp = msgtemp + msg1[0][i]
         i = i + 1
     msg1[0] = msg_temp
