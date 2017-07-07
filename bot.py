@@ -85,7 +85,7 @@ def default(chat, message):
     msg1[0]= msg1[0].split(" ")
     global text
     text = re.escape("/")
-    for k in range(len(msg1[0]))
+    for k in range(len(msg1[0])):
         text = text + re.escape('(?=.*?') + msg1[0][k] + ")"
     text = text + re.escape('/gi')
     msg1[0] = text
