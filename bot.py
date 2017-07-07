@@ -2,6 +2,7 @@ import os
 import logging
 import json
 import math
+import re
 
 from aiotg import Bot, chat
 from database import db, text_search
@@ -84,9 +85,9 @@ def default(chat, message):
     msg1[0] = msg1[0].split(" ")
     def getremsg(source):
         global msg_temp
-        msg_temp = ''
-        for i in range(0, len(source), 1):
-            msg_temp = msg_temp + "|" + source[i]
+        msg_temp = []
+        for k in range(0, len(source), 1):
+            msg_temp[k] = re.compile(source[k], re.I)
         logger.info(msg_temp)
         return msg_temp
     msg1[0] = getremsg(msg1[0])

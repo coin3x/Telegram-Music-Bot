@@ -1,6 +1,5 @@
 import os
 import pymongo
-import re
 from motor.motor_asyncio import AsyncIOMotorClient
 
 
@@ -22,10 +21,10 @@ def text_search(query,typef='audio'):
         typef = 'mpeg'
     return db.tracks.find(
         {"$and":[
-            {'mime_type': re.compile(typef, re.I)},
+            {'mime_type': {'$regex':typef, '$options':'i'}},
             {"$or":[
-                {'title': re.compile(query, re.I)},
-                {'performer': re.compile(query, re.I)}
+                {'title': {"$in": query}},
+                {'performer': {"$in": query}}
             ]}]},
         { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
 
