@@ -106,20 +106,30 @@ def default(chat, message):
 @bot.inline
 async def inline(iq):
     msg = iq.query.split(" type:")
-    if (len(msg) == 2):
-        logger.info("%s", str(msg[0]))
-        await bot.send_message(os.environ.get("CHNID"),str(msg[0]))
+    art = msg[0].split('>')
+    if (len(art) == 2):
+        if (len(msg) == 2):
+            logger.info("%s 搜尋了 %s 格式的 %s 的 %s", iq.sender, msg[1].upper(), art[0], art[1])
+            await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + msg[1].upper() + " 格式的 " + art[0] + "的" + art[1])
+            cursor = text_search(typef=msg[1], aut=art[0], son=art[1])
+            results = [inline_result(t) for t in await cursor.to_list(10)]
+            await iq.answer(results)
+        elif (len(msg) == 1):
+            logger.info("%s 搜尋了 %s 的 %s", iq.sender,  art[0], art[1])
+            await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + art[0] + "的" + art[1])
+            cursor = text_search(aut=art[0], son=art[1])
+            results = [inline_result(t) for t in await cursor.to_list(10)]
+            await iq.answer(results)
+    elif (len(msg) == 2):
         logger.info("%s 搜尋了 %s 格式的 %s", iq.sender, msg[1].upper(), msg[0])
-        await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + msg[1] + " 格式的 " + msg[0])
+        await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + msg[1].upper() + " 格式的 " + msg[0])
         cursor = text_search(msg[0], msg[1])
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
     elif (len(msg) == 1):
-        logger.info("%s", str(iq.sender))
-        await bot.send_message(os.environ.get("CHNID"),str(iq.sender))
         logger.info("%s 搜尋了 %s", iq.sender, iq.query)
         await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + str(iq.query))
-        cursor = text_search(iq.query, 'audio')
+        cursor = text_search(iq.query)
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
     else:
@@ -208,6 +218,7 @@ async def search_tracks(chat, query=1, page=1, typev='audio', author=1, song=1):
                 await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + author + " 的 " + song)
             else:
                 logger.info("%s 搜尋了 %s 格式的 %s 的 %s", chat.sender, typev.upper(), author, song)
+                await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typev.upper() + " 格式的 " + author + " 的 " + song)
         elif (typev == 'audio'):
             logger.info("%s 搜尋了 %s", chat.sender, query)
             await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
