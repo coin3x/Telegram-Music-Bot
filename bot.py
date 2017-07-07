@@ -82,8 +82,13 @@ def more(chat, match):
 @bot.default
 def default(chat, message):
     msg1 = message["text"].split(" type:")
-    msg1[0] = msg1[0].split(" ")
-    msg1[0] = [re.compile(text, re.I) for text in msg1[0]]
+    msg1[0]= msg1[0].split(" ")
+    global text
+    text = re.escape("/")
+    for k in range(len(msg1[0]))
+        text = text + re.escape('(?=.*?') + msg1[0][k] + ")"
+    text = text + re.escape('/gi')
+    msg1[0] = text
     if (len(msg1) == 2):
         return search_tracks(chat, msg1[0], typev=msg1[1])
     elif (len(msg1) == 1):

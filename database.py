@@ -23,8 +23,8 @@ def text_search(query,typef='audio'):
         {"$and":[
             {'mime_type': {'$regex':typef, '$options':'i'}},
             {"$or":[
-                {'title': {"$in": query}},
-                {'performer': {"$in": query}}
+                {'title': query},
+                {'performer': query}
             ]}]},
         { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
 
