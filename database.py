@@ -24,7 +24,7 @@ def text_search(query,typef='audio'):
         {"$and":[
             {'mime_type': re.compile(typef, re.I)},
             {"$or":[
-                {'title': re.compile(query, re.I),},
+                {'title': re.compile(query, re.I)},
                 {'performer': re.compile(query, re.I)}
             ]}]},
         { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
