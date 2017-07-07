@@ -84,10 +84,10 @@ def default(chat, message):
     msg1 = message["text"].split(" type:")
     msg1[0]= msg1[0].split(" ")
     global textA
-    textA = "/"
+    textA = ''
     for k in range(len(msg1[0])):
         textA = textA + '(?=.*?' + msg1[0][k] + ")"
-    textA = textA + '.*?/i'
+    textA = textA + '.*?'
     final = re.compile (textA, re.IGNORECASE)
     logger.info(msg1[0])
     if (len(msg1) == 2):
