@@ -83,15 +83,7 @@ def more(chat, match):
 def default(chat, message):
     msg1 = message["text"].split(" type:")
     msg1[0] = msg1[0].split(" ")
-    def getremsg(source):
-        global msg_temp
-        msg_temp = []
-        for k in range(0, len(source), 1):
-            temp = re.compile(source[k], re.I)
-            msg_temp.append(temp)
-        logger.info(msg_temp)
-        return msg_temp
-    msg1[0] = getremsg(msg1[0])
+    msg1[0] = [re.compile(text, re.I) for text in msg1[0]]
     if (len(msg1) == 2):
         return search_tracks(chat, msg1[0], typev=msg1[1])
     elif (len(msg1) == 1):
