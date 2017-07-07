@@ -78,7 +78,14 @@ def more(chat, match):
 def default(chat, message):
         return search_tracks(chat, message["text"])
 
+@bot.command(r'/flac (.+)')
+    def music(chat, match):
+        return search_tracks(chat, match.group(1),,'flac')
 
+@bot.command(r'/mp3 (.+)')
+    def music(chat, match):
+        return search_tracks(chat, match.group(1),,'mpeg')
+    
 @bot.inline
 async def inline(iq):
     logger.info("%s", str(iq.sender))
@@ -161,17 +168,19 @@ def send_track(chat, keyboard, track):
     )
 
 
-async def search_tracks(chat, query, page=1):
-    if(str(chat.sender) == "N/A"):
-        pass
-    else:
-        logger.info("%s 搜尋了 %s", chat.sender, query)
-        await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
+async def search_tracks(chat, query, page=1, typev='audio'):
+    if(str(chat.sender) != "N/A"):
+        if (typev == 'audio'):
+            logger.info("%s 搜尋了 %s", chat.sender, query)
+            await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
+        else:
+            logger.info("%s 搜尋了 %s 格式的 %s", chat.sender, typev.upper(), query)
+            await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typev.upper() + " 格式的 " + str(query))
 
         limit = 3
         offset = (page - 1) * limit
 
-        cursor = text_search(query).skip(offset).limit(limit)
+        cursor = text_search(query,typev).skip(offset).limit(limit)
         count = await cursor.count()
         results = await cursor.to_list(limit)
 
