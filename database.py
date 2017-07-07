@@ -23,12 +23,13 @@ def text_search(query,type='audio'):
     return db.tracks.find(
         {"$and":[
             {"$or":[
-                {'title':{'$regex':'chico', '$options':'i'}},
-                {'performer':{'$regex':'chico', '$options':'i'}}
+                {'title':{'$regex':query, '$options':'i'}},
+                {'performer':{'$regex':query, '$options':'i'}}
             ]},
-            {'mime_type':{'$regex':'mpeg', '$options':'i'}}]},
-        { 'score': { '$meta': 'textScore' }}
-    ).sort({'score': {'$meta': 'textScore'}})
+            {'mime_type':{'$regex':type, '$options':'i'}}]},
+        { 'score': { '$meta': 'textScore' }},
+        {'$sort':{'score':{'$meta': 'textScore'}}}
+    )
 
 
 async def prepare_index():
