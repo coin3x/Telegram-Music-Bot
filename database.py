@@ -26,10 +26,7 @@ def text_search(query,type='audio'):
                 {'title':{'$regex':query, '$options':'i'}},
                 {'performer':{'$regex':query, '$options':'i'}}
             ]},
-            {'mime_type':{'$regex':type, '$options':'i'}}]},
-        { 'score': { '$meta': 'textScore' }},
-        {'$sort':{'score':{'$meta': 'textScore'}}}
-    )
+            {'mime_type':{'$regex':type, '$options':'i'}}]})
 
 
 async def prepare_index():
