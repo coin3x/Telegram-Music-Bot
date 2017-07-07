@@ -85,7 +85,7 @@ def default(chat, message):
     def getremsg(source):
         msg_temp = source[0]
         for i in range(1, len(source), 1):
-            msg_temp = msg_temp + source[i]
+            msg_temp = msg_temp + "|" + source[i]
         return (msg_temp)
     msg1[0] = getremsg(msg1[0])
     if (len(msg1) == 2):
