@@ -87,7 +87,7 @@ def default(chat, message):
         global msg_temp
         msg_temp = []
         for k in range(0, len(source), 1):
-            msg_temp[k] = re.compile(source[k], re.I)
+            msg_temp.append = re.compile(source[k], re.I)
         logger.info(msg_temp)
         return msg_temp
     msg1[0] = getremsg(msg1[0])
