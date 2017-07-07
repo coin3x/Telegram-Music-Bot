@@ -17,25 +17,48 @@ db = client.python
         { 'score': { '$meta': 'textScore' } }
     ).sort([('score', {'$meta': 'textScore'})])'''
 
-def text_search(query,typef='audio'):
+def text_search(query,typef='audio',aut=1,son=1):
     if (typef == 'mp3'):
         typef = 'mpeg'
-    query2 = query.split(" ")
-    global textA
-    textA = ''
-    for k in range(len(query2)):
-        textA = textA + '(?=.*?' + query2[k] + ")"
-    textA = textA + '.*?'
-    final = re.compile (textA, re.IGNORECASE)
-    return db.tracks.find(
-        {"$and":[
-            {'mime_type': {'$regex':typef, '$options':'i'}},
-            {"$or":[
-                {'title': final},
+    if (aut == 1 and son == 1):
+        query2 = query.split(" ")
+        global textA
+        textA = ''
+        for k in range(len(query2)):
+            textA = textA + '(?=.*?' + query2[k] + ")"
+        textA = textA + '.*?'
+        final = re.compile (textA, re.IGNORECASE)
+        return db.tracks.find(
+            {"$and":[
+                {'mime_type': {'$regex':typef, '$options':'i'}},
+                {"$or":[
+                    {'title': final},
                 {'performer': final}
-            ]}]},
-        { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
-
+                ]}]},
+            { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
+    elif (aut != 1 and son !=1):
+        aut2 = aut.split(" ")
+        global textAUT
+        textAUT = ''
+        for k in range(len(aut2)):
+            textAUT = textAUT + '(?=.*?' + aut2[k] + ")"
+        textAUT = textAUT + '.*?'
+        finalAUT = re.compile (textAUT, re.IGNORECASE)
+        son2 = son.split(" ")
+        global textSON
+        textSON = ''
+        for k in range(len(son2)):
+            textSON = textSON + '(?=.*?' + son2[k] + ")"
+        textSON = textSON + '.*?'
+        finalSON = re.compile (textSON, re.IGNORECASE) 
+        return db.tracks.find(
+            {"$and":[
+                {'mime_type': {'$regex':typef, '$options':'i'}},
+                {"$or":[
+                    {'title': finalSON},
+                {'performer': finalAUT}
+                ]}]},
+            { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
 
 async def prepare_index():
     await db.tracks.create_index([
