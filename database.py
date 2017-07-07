@@ -28,7 +28,7 @@ def text_search(query,type='audio'):
             ]},
             {'mime_type':{'$regex':type, '$options':'i'}}]},
         { 'score': { '$meta': 'textScore' } }
-    ).sort([('score', {'$meta': 'textScore'})])
+    )
 
 
 async def prepare_index():

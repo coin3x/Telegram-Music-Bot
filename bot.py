@@ -78,23 +78,25 @@ def more(chat, match):
 def default(chat, message):
         return search_tracks(chat, message["text"])
 
-@bot.command(r'/flac (.+)')
-async def music(chat, match):
-        return search_tracks(chat, match.group(1),typev='flac')
-
-@bot.command(r'/mp3 (.+)')
-async def music(chat, match):
-        return search_tracks(chat, match.group(1),typev='mpeg')
-
 @bot.inline
 async def inline(iq):
-    logger.info("%s", str(iq.sender))
-    await bot.send_message(os.environ.get("CHNID"),str(iq.sender))
-    logger.info("%s 搜尋了 %s", iq.sender, iq.query)
-    await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + str(iq.query))
-    cursor = text_search(iq.query)
-    results = [inline_result(t) for t in await cursor.to_list(10)]
-    await iq.answer(results)
+    msg = iq.query.split('type:')
+    if (msg[1]):
+        logger.info("%s", str(msg[0]))
+        await bot.send_message(os.environ.get("CHNID"),str(msg[0]))
+        logger.info("%s 搜尋了 %s 格式的 %s", iq.sender, msg[1], msg[0])
+        await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + msg[1] + " 格式的 " + msg[0])
+        cursor = text_search(msg[0],msg[1])
+        results = [inline_result(t) for t in await cursor.to_list(10)]
+        await iq.answer(results)
+    else:
+        logger.info("%s", str(iq.sender))
+        await bot.send_message(os.environ.get("CHNID"),str(iq.sender))
+        logger.info("%s 搜尋了 %s", iq.sender, iq.query)
+        await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + str(iq.query))
+        cursor = text_search(iq.query)
+        results = [inline_result(t) for t in await cursor.to_list(10)]
+        await iq.answer(results)
 
 
 @bot.command(r'/music(@%s)?$' % bot.name)
@@ -170,7 +172,6 @@ def send_track(chat, keyboard, track):
 
 async def search_tracks(chat, query, page=1, typev='audio'):
     if(str(chat.sender) != "N/A"):
-        if (typev == 'audio'):
             logger.info("%s 搜尋了 %s", chat.sender, query)
             await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
         else:
