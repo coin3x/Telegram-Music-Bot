@@ -7,17 +7,21 @@ from aiotg import Bot, chat
 from database import db, text_search
 
 greeting = """
-    ✋ 歡迎來到棒棒勝 Music 的 Bot ! 🎧
+✋ 歡迎來到棒棒勝 Music 的 Bot ! 🎧
 輸入關鍵字來搜尋音樂資料庫，傳送音樂檔案以增加至資料庫。
-輸入 /help 來獲取說明!
+輸入 `/help` 來獲取說明!
 ** 丟進本 Bot 的音樂不會同步到頻道唷!只有頻道的會同步過來 owo **
 """
 
 help = """
 輸入關鍵字來搜尋音樂資料庫。
-輸入 /stats 來獲取 bot 資訊。
-用 /music 指令來在群聊內使用棒棒勝 Music Bot，像這樣:
-/music 棒棒勝
+在關鍵字後輸入`type:TYPE`來限定音樂格式，像這樣:
+```棒棒勝 type:flac```
+```棒棒勝 type:mp3```
+```棒棒勝 type:mpeg```
+輸入 `/stats` 來獲取 bot 資訊。
+用 `/music` 指令來在群聊內使用棒棒勝 Music Bot，像這樣:
+```/music 棒棒勝```
 """
 
 not_found = """
@@ -76,7 +80,7 @@ def more(chat, match):
 
 @bot.default
 def default(chat, message):
-    msg1 = message["text"].split("type:")
+    msg1 = message["text"].split(" type:")
     if (str(len(msg1)) == '2'):
         return search_tracks(chat, msg1[0], typev=msg1[1])
     elif (str(len(msg1)) == '1'):
@@ -89,7 +93,7 @@ def default(chat, message):
 
 @bot.inline
 async def inline(iq):
-    msg = iq.query.split("type:")
+    msg = iq.query.split(" type:")
     if (str(len(msg)) == '2'):
         logger.info("%s", str(msg[0]))
         await bot.send_message(os.environ.get("CHNID"),str(msg[0]))
@@ -205,9 +209,9 @@ async def search_tracks(chat, query, page=1, typev='audio'):
             return
 
         # Return single result if we have exact match for title and performer
-        '''if results[0]['score'] > 2:
+        if results[0]['score'] > 2:
             limit = 1
-            results = results[:1]'''
+            results = results[:1]
 
         newoff = offset + limit
         show_more = count > newoff
