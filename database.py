@@ -20,8 +20,13 @@ db = client.python
 def text_search(query,typef='audio',aut=1,son=1):
     if (typef == 'mp3'):
         typef = 'mpeg'
-    if (aut == 1 and son == 1):
-        query2 = query.split(" ")
+    if (query.find(">") == -1):
+        queryty = query.split(" type:")
+        query2 = queryty.split(" ")
+        if (len(querty) == 1):
+            typef = 'audio'
+        else:
+            typef = querty[1]
         global textA
         textA = ''
         for k in range(len(query2)):
@@ -36,7 +41,15 @@ def text_search(query,typef='audio',aut=1,son=1):
                 {'performer': final}
                 ]}]},
             { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
-    elif (aut != 1 and son !=1):
+    elif (query.find(">") != -1):
+        RRR = query.split(" type:")
+        art = RRR[0].split(">")
+        if (len(RRR) == 1):
+            typef = 'audio'
+        else:
+            typef = RRR[1]
+        aut = art[0]
+        son = art[1]
         aut2 = aut.split(" ")
         global textAUT
         textAUT = ''
