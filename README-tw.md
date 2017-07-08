@@ -1,6 +1,6 @@
 ﻿# Telegram 音樂 bot
 ----------
-[![部屬到 OpenShift](http://launch-shifter.rhcloud.com/launch/light/部屬到.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=python-3.5&initial_git_url=https://github.com/rexx0520/Telegram-Music-Bot&name=Telegram Music Bot)
+[![部屬到 OpenShift](http://launch-shifter.rhcloud.com/launch/light/部屬到.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=python-3.5&initial_git_url=https://github.com/rexx0520/Telegram-Music-Bot&name=Telegram%20Music%20Bot)
 
 ## 簡介
 
