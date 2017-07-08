@@ -18,7 +18,8 @@ def text_search(query):
             typef = 'mpeg'
         else:
             typef = typel[1]
-        keyword_regex = re.compile (reduce(lambda x,y: x+'(?=.*?'+y+')', typel[0].split(" ")) + '.*?', re.IGNORECASE)
+        keyword = typel[0].split(" ")
+        keyword_regex = re.compile (reduce(lambda x,y: x+'(?=.*?'+y+')', keyword) + '.*?', re.IGNORECASE)
         return db.tracks.find(
             {"$and":[
                 {'mime_type': re.compile (typef, re.IGNORECASE)},
@@ -35,12 +36,14 @@ def text_search(query):
             typef = 'mpeg'
         else:
             typef = typel[1]
+        title = art[1].split(" ")
+        performer = art[0].split(" ")
         return db.tracks.find(
             {"$and":[
                 {'mime_type': re.compile (typef, re.IGNORECASE)},
                 {"$and":[
-                    {'title': re.compile (reduce(lambda x,y: x+'(?=.*?'+y+')', art[1].split(" ")) + '.*?', re.IGNORECASE)},
-                {'performer': re.compile (reduce(lambda x,y: x+'(?=.*?'+y+')', art[0].split(" ")) + '.*?', re.IGNORECASE)}
+                    {'title': re.compile (reduce(lambda x,y: x+'(?=.*?'+y+')', title) + '.*?', re.IGNORECASE)},
+                {'performer': re.compile (reduce(lambda x,y: x+'(?=.*?'+y+')', performer) + '.*?', re.IGNORECASE)}
                 ]}]},
             { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
 
