@@ -1,4 +1,6 @@
 # Telegram Music Bot
+----------
+[![LAUNCH ON OpenShift](http://launch-shifter.rhcloud.com/launch/light/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=python-3.5&initial_git_url=https://github.com/rexx0520/Telegram-Music-Bot&name=Telegram Music Bot)
 
 ## Description
 
