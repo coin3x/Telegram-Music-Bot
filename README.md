@@ -21,7 +21,9 @@ Command  `/help`  for help.
 
 
 >```Xiaoan type:flac```
->```Xiaoan type:mp3``` ( `mp3` was converted to `mpeg` in bot since mp3 is not a mime-type.) 
+>
+>```Xiaoan type:mp3``` ( `mp3` was converted to `mpeg` in bot since mp3 is not a mime-type.)
+> 
 >```Xiaoan type:mpeg```
 
 Seperate the artist and song by `>` .
