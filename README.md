@@ -1,5 +1,5 @@
 # Telegram Music Bot
-----------
+
 [![LAUNCH ON OpenShift](http://launch-shifter.rhcloud.com/launch/light/LAUNCH%20ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=python-3.5&initial_git_url=https://github.com/rexx0520/Telegram-Music-Bot&name=Telegram%20Music%20Bot)
 
 ## Description
@@ -9,7 +9,7 @@ Was originated and  improved from [szastupov/musicbot](//github.com/szastupov/mu
 
 
 ## Usage
-----------
+
 Simply type in keywords to search from the database.
 Simply send music files to add to the database.
 Command  `/help`  for help.
@@ -36,7 +36,7 @@ Songs which was uploaded to the music channel will be sync to the database.
 
 
 ## Environment Variables
-----------
+
 **API_TOKEN** : Bot's API Token.
 **BOT_NAME** : Bot's name.
 

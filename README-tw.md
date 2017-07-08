@@ -1,5 +1,5 @@
 ﻿# Telegram 音樂 bot
-----------
+
 [![部屬到 OpenShift](http://launch-shifter.rhcloud.com/launch/light/部屬到.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=python-3.5&initial_git_url=https://github.com/rexx0520/Telegram-Music-Bot&name=Telegram%20Music%20Bot)
 
 ## 簡介
@@ -9,7 +9,7 @@
 
 
 ## 用法
-----------
+
 輸入關鍵字來搜尋音樂資料庫，傳送音樂檔案以增加至資料庫。
 輸入 `/help` 來獲取說明
 在關鍵字後輸入`type:TYPE`來限定音樂格式，像這樣:
@@ -27,7 +27,7 @@
 
 
 ## 環境變數
-----------
+
 **API_TOKEN** : Bot 的 API Token
 **BOT_NAME** : Bot 的名字
 
