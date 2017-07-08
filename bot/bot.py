@@ -3,6 +3,7 @@ import logging
 import json
 import math
 import re
+import random
 
 from aiotg import Bot, chat
 from database import db, text_search
@@ -96,25 +97,25 @@ async def inline(iq):
             logger.info("%s 搜尋了 %s 格式的 %s 的 %s", iq.sender, msg[1].upper(), art[0], art[1])
             await bot.send_message(os.environ.get("LOGCHN_ID"),str(iq.sender) + " 搜尋了 " + msg[1].upper() + " 格式的 " + art[0] + "的" + art[1])
             cursor = text_search(iq.query)
-            results = [inline_result(t) for t in await cursor.to_list(10)]
+            results = [inline_result(iq.query, t) for t in await cursor.to_list(10)]
             await iq.answer(results)
         elif (len(msg) == 1):
             logger.info("%s 搜尋了 %s 的 %s", iq.sender,  art[0], art[1])
             await bot.send_message(os.environ.get("LOGCHN_ID"),str(iq.sender) + " 搜尋了 " + art[0] + "的" + art[1])
             cursor = text_search(iq.query)
-            results = [inline_result(t) for t in await cursor.to_list(10)]
+            results = [inline_result(iq.query, t) for t in await cursor.to_list(10)]
             await iq.answer(results)
     elif (len(msg) == 2):
         logger.info("%s 搜尋了 %s 格式的 %s", iq.sender, msg[1].upper(), msg[0])
         await bot.send_message(os.environ.get("LOGCHN_ID"),str(iq.sender) + " 搜尋了 " + msg[1].upper() + " 格式的 " + msg[0])
         cursor = text_search(iq.query)
-        results = [inline_result(t) for t in await cursor.to_list(10)]
+        results = [inline_result(iq.query, t) for t in await cursor.to_list(10)]
         await iq.answer(results)
     elif (len(msg) == 1):
         logger.info("%s 搜尋了 %s", iq.sender, iq.query)
         await bot.send_message(os.environ.get("LOGCHN_ID"),str(iq.sender) + " 搜尋了 " + str(iq.query))
         cursor = text_search(iq.query)
-        results = [inline_result(t) for t in await cursor.to_list(10)]
+        results = [inline_result(iq.query, t) for t in await cursor.to_list(10)]
         await iq.answer(results)
     else:
         logger.info("元素個數有問題RR")
@@ -136,7 +137,7 @@ async def start(chat, match):
         await bot.send_message(os.environ.get("LOGCHN_ID"),"新用戶 " + str(chat.sender))
         await db.users.insert(chat.sender.copy())
 
-    await chat.send_text(greeting)
+    await chat.send_text(greeting, parse_mode='Markdown')
 
 
 @bot.command(r'/stop')
@@ -247,13 +248,18 @@ async def search_tracks(chat, query, page=1):
             await send_track(chat, keyboard, track)
 
 
-def inline_result(track):
-    return {
-        "type": "audio",
-        "id": track["file_id"],
-        "audio_file_id": track["file_id"],
-        "title": "{} - {}".format(
-            track.get("performer", "未知的歌手"),
-            track.get("title", "未命名標題")
-        )
+def inline_result(query, track):
+    global seed
+    seed = query + str(random.randint(0,9999999))
+    random.seed(query + str(random.randint(0,9999999)))
+    noinline ={
+        "message_text": track.get("performer", "") + ">" + track.get("title", "")
     }
+    results = {
+            "type": "document",
+            "id": track["file_id"] + str(random.randint(0,99)),
+            "document_file_id": track["file_id"],
+            "title" : "{} - {}".format(track.get("performer", "未知藝術家"),track.get("title", "無標題")),
+            "input_message_content" : noinline
+            }
+    return results
