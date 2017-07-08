@@ -43,17 +43,17 @@ channel = bot.channel(os.environ.get('CHANNEL'))
 @bot.handle("audio")
 async def add_track(chat, audio):
     if (str(chat.sender) == 'N/A'):
-        sendervar = '棒棒勝 Music Channel'
+        sendervar = os.environ.get('CHANNEL_NAME')
     else:
         sendervar = str(chat.sender)
     if (await db.tracks.find_one({ "file_id": audio["file_id"] })):
         await chat.send_text("資料庫裡已經有這首囉 owo")
         logger.info("%s 傳送了重複的歌曲 %s %s", sendervar, str(audio.get("performer")), str(audio.get("title")))
-        await bot.send_message(os.environ.get("CHNID"),sendervar + " 傳送了重複的歌曲 " + str(audio.get("performer")) + " - " + str(audio.get("title")))
+        await bot.send_message(os.environ.get("LOGCHN_ID"),sendervar + " 傳送了重複的歌曲 " + str(audio.get("performer")) + " - " + str(audio.get("title")))
         return
 
     if "title" not in audio:
-        await chat.send_text("你丟的音樂沒有標題資訊唷 :(")
+        await chat.send_text("傳送失敗...是不是你的音樂檔案少了資訊標籤? :(")
         return
 
     doc = audio.copy()
@@ -65,8 +65,8 @@ async def add_track(chat, audio):
         
     await db.tracks.insert(doc)
     logger.info("%s 新增了 %s %s", sendervar, doc.get("performer"), doc.get("title"))
-    await bot.send_message(os.environ.get("CHNID"),sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")))
-    if (sendervar != '棒棒勝 Music Channel'):
+    await bot.send_message(os.environ.get("LOGCHN_ID"),sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")))
+    if (sendervar != os.environ.get('CHANNEL_NAME')):
         await chat.send_text(sendervar + " 新增了 " + str(doc.get("performer")) + " - " + str(doc.get("title")) + " !")
 
 
@@ -94,38 +94,38 @@ async def inline(iq):
     if (len(art) == 2):
         if (len(msg) == 2):
             logger.info("%s 搜尋了 %s 格式的 %s 的 %s", iq.sender, msg[1].upper(), art[0], art[1])
-            await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + msg[1].upper() + " 格式的 " + art[0] + "的" + art[1])
-            cursor = text_search(typef=msg[1], aut=art[0], son=art[1])
+            await bot.send_message(os.environ.get("LOGCHN_ID"),str(iq.sender) + " 搜尋了 " + msg[1].upper() + " 格式的 " + art[0] + "的" + art[1])
+            cursor = text_search(iq.query)
             results = [inline_result(t) for t in await cursor.to_list(10)]
             await iq.answer(results)
         elif (len(msg) == 1):
             logger.info("%s 搜尋了 %s 的 %s", iq.sender,  art[0], art[1])
-            await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + art[0] + "的" + art[1])
-            cursor = text_search(aut=art[0], son=art[1])
+            await bot.send_message(os.environ.get("LOGCHN_ID"),str(iq.sender) + " 搜尋了 " + art[0] + "的" + art[1])
+            cursor = text_search(iq.query)
             results = [inline_result(t) for t in await cursor.to_list(10)]
             await iq.answer(results)
     elif (len(msg) == 2):
         logger.info("%s 搜尋了 %s 格式的 %s", iq.sender, msg[1].upper(), msg[0])
-        await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + msg[1].upper() + " 格式的 " + msg[0])
-        cursor = text_search(msg[0], msg[1])
+        await bot.send_message(os.environ.get("LOGCHN_ID"),str(iq.sender) + " 搜尋了 " + msg[1].upper() + " 格式的 " + msg[0])
+        cursor = text_search(iq.query)
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
     elif (len(msg) == 1):
         logger.info("%s 搜尋了 %s", iq.sender, iq.query)
-        await bot.send_message(os.environ.get("CHNID"),str(iq.sender) + " 搜尋了 " + str(iq.query))
+        await bot.send_message(os.environ.get("LOGCHN_ID"),str(iq.sender) + " 搜尋了 " + str(iq.query))
         cursor = text_search(iq.query)
         results = [inline_result(t) for t in await cursor.to_list(10)]
         await iq.answer(results)
     else:
         logger.info("元素個數有問題RR")
-        await bot.send_message(os.environ.get("CHNID"),"元素個數有問題RRR")
-        await bot.send_message(os.environ.get("CHNID"),"(iq.query , msg , len(msg)) = " + str(iq.query) + " , " + str(msg) + " , " + str(len(msg)))
+        await bot.send_message(os.environ.get("LOGCHN_ID"),"元素個數有問題RRR")
+        await bot.send_message(os.environ.get("LOGCHN_ID"),"(iq.query , msg , len(msg)) = " + str(iq.query) + " , " + str(msg) + " , " + str(len(msg)))
         logger.info("(iq.query , msg , len(msg)) = (%s , %s , %d)", str(iq.query), str(msg), len(msg))
 
 
 @bot.command(r'/music(@%s)?$' % bot.name)
 def usage(chat, match):
-    return chat.send_text(greeting)
+    return chat.send_text(greeting, parse_mode='Markdown')
 
 
 @bot.command(r'/start')
@@ -133,7 +133,7 @@ async def start(chat, match):
     tuid = chat.sender["id"]
     if not (await db.users.find_one({ "id": tuid })):
         logger.info("新用戶 %s", chat.sender)
-        await bot.send_message(os.environ.get("CHNID"),"新用戶 " + str(chat.sender))
+        await bot.send_message(os.environ.get("LOGCHN_ID"),"新用戶 " + str(chat.sender))
         await db.users.insert(chat.sender.copy())
 
     await chat.send_text(greeting)
@@ -145,13 +145,13 @@ async def stop(chat, match):
     await db.users.remove({ "id": tuid })
 
     logger.info("%s 退出了", chat.sender)
-    await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 退出了")
+    await bot.send_message(os.environ.get("LOGCHN_ID"),str(chat.sender) + " 退出了")
     await chat.send_text("掰掰! 😢")
 
 
 @bot.command(r'/help')
 def usage(chat, match):
-    return chat.send_text(help)
+    return chat.send_text(help, parse_mode='Markdown')
 
 
 @bot.command(r'/stats')
@@ -203,16 +203,16 @@ async def search_tracks(chat, query, page=1):
             song = art[1]
             if (len(typel) == 1):
                 logger.info("%s 搜尋了 %s 的 %s", chat.sender, author, song)
-                await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + author + " 的 " + song)
+                await bot.send_message(os.environ.get("LOGCHN_ID"),str(chat.sender) + " 搜尋了 " + author + " 的 " + song)
             else:
                 logger.info("%s 搜尋了 %s 格式的 %s 的 %s", chat.sender, typel[1].upper(), author, song)
-                await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + author + " 的 " + song)
+                await bot.send_message(os.environ.get("LOGCHN_ID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + author + " 的 " + song)
         elif (len(typel) == 1):
             logger.info("%s 搜尋了 %s", chat.sender, query)
-            await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + str(query))
+            await bot.send_message(os.environ.get("LOGCHN_ID"),str(chat.sender) + " 搜尋了 " + str(query))
         else:
             logger.info("%s 搜尋了 %s 格式的 %s", chat.sender, typel[1].upper(), typel[0])
-            await bot.send_message(os.environ.get("CHNID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + str(typel[0]))
+            await bot.send_message(os.environ.get("LOGCHN_ID"),str(chat.sender) + " 搜尋了 " + typel[1].upper() + " 格式的 " + str(typel[0]))
 
         limit = 3
         offset = (page - 1) * limit

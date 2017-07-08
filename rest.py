@@ -74,7 +74,7 @@ class RestBridge:
 
     async def start(self):
         loop = asyncio.get_event_loop()
-        srv = await loop.create_server(self.handler, '0.0.0.0', '8080')
+        srv = await loop.create_server(self.handler, os.environ.get("REST_HOST"), os.environ.get("REST_PORT"))
         logger.info('serving REST on %s', srv.sockets[0].getsockname())
         self.srv = srv
 

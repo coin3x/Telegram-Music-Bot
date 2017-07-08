@@ -5,7 +5,7 @@ import re
 
 
 client = AsyncIOMotorClient(host=os.environ.get('MONGO_HOST'))
-db = client.python
+db = client[os.environ.get('MONGO_DB_NAME')]
 
 
 
@@ -26,13 +26,13 @@ def text_search(query):
             global textA
             textA = textA + '(?=.*?' + query2[k] + ")"
         textA = textA + '.*?'
-        final = re.compile (textA, re.IGNORECASE)
+        keyword_regex = re.compile (textA, re.IGNORECASE)
         return db.tracks.find(
             {"$and":[
-                {'mime_type': {'$regex':typef, '$options':'i'}},
+                {'mime_type': re.compile (typef, re.IGNORECASE)},
                 {"$or":[
-                    {'title': final},
-                {'performer': final}
+                    {'title': keyword_regex},
+                {'performer': keyword_regex}
                 ]}]},
             { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
     elif (query.find(">") != -1):
@@ -50,7 +50,6 @@ def text_search(query):
             global textAUT
             textAUT = textAUT + '(?=.*?' + aut2[k] + ")"
         textAUT = textAUT + '.*?'
-        finalAUT = re.compile (textAUT, re.IGNORECASE)
         son2 = art[1].split(" ")
         global textSON
         textSON = ''
@@ -58,13 +57,12 @@ def text_search(query):
             global textSON
             textSON = textSON + '(?=.*?' + son2[k] + ")"
         textSON = textSON + '.*?'
-        finalSON = re.compile (textSON, re.IGNORECASE) 
         return db.tracks.find(
             {"$and":[
-                {'mime_type': {'$regex':typef, '$options':'i'}},
+                {'mime_type': re.compile (typef, re.IGNORECASE)},
                 {"$and":[
-                    {'title': finalSON},
-                {'performer': finalAUT}
+                    {'title': re.compile (textSON, re.IGNORECASE) },
+                {'performer': re.compile (textAUT, re.IGNORECASE)}
                 ]}]},
             { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
 
