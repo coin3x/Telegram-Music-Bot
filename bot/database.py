@@ -1,22 +1,70 @@
 import os
 import pymongo
-
 from motor.motor_asyncio import AsyncIOMotorClient
+import re
 
 
 client = AsyncIOMotorClient(host=os.environ.get('MONGO_HOST'))
-db = client.heroku_chk0mqtz
+db = client[os.environ.get('MONGO_DB_NAME')]
+
 
 
 def text_search(query):
-    return db.tracks.find(
-        {"$or":[
-            {'title':{'$regex':query, '$options':'i'}},
-            {'performer':{'$regex':query, '$options':'i'}}
-        ]},
-        { 'score': { '$meta': 'textScore' } }
-    ).sort([('score', {'$meta': 'textScore'})])
+    typel = query.split(" type:")
+    if (query.find(">") == -1):
 
+        query2 = typel[0].split(" ")
+        if (len(typel) == 1):
+            typef = 'audio'
+        elif (typel[1] == 'mp3'):
+            typef = 'mpeg'
+        else:
+            typef = typel[1]
+        global textA
+        textA = ''
+        for k in range(len(query2)):
+            global textA
+            textA = textA + '(?=.*?' + query2[k] + ")"
+        textA = textA + '.*?'
+        keyword_regex = re.compile (textA, re.IGNORECASE)
+        return db.tracks.find(
+            {"$and":[
+                {'mime_type': re.compile (typef, re.IGNORECASE)},
+                {"$or":[
+                    {'title': keyword_regex},
+                {'performer': keyword_regex}
+                ]}]},
+            { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
+    elif (query.find(">") != -1):
+        art = typel[0].split(">")
+        if (len(typel) == 1):
+            typef = 'audio'
+        elif (typel[1] == 'mp3'):
+            typef = 'mpeg'
+        else:
+            typef = typel[1]
+        aut2 = art[0].split(" ")
+        global textAUT
+        textAUT = ''
+        for k in range(len(aut2)):
+            global textAUT
+            textAUT = textAUT + '(?=.*?' + aut2[k] + ")"
+        textAUT = textAUT + '.*?'
+        son2 = art[1].split(" ")
+        global textSON
+        textSON = ''
+        for k in range(len(son2)):
+            global textSON
+            textSON = textSON + '(?=.*?' + son2[k] + ")"
+        textSON = textSON + '.*?'
+        return db.tracks.find(
+            {"$and":[
+                {'mime_type': re.compile (typef, re.IGNORECASE)},
+                {"$and":[
+                    {'title': re.compile (textSON, re.IGNORECASE) },
+                {'performer': re.compile (textAUT, re.IGNORECASE)}
+                ]}]},
+            { 'score': { '$meta': 'textScore' } }).sort([('score', {'$meta': 'textScore'})])
 
 async def prepare_index():
     await db.tracks.create_index([
